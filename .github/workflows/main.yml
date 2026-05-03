@@ -1,0 +1,34 @@
+name: BGMI_BOT_RUNNER
+
+on:
+  workflow_dispatch: # बटन दबाकर खुद शुरू करने के लिए
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          pip install pyTelegramBotAPI
+
+      - name: Compile BGMI Binary
+        run: |
+          # BGMI.c फाइल को कंपाइल करके 'BGMI' नाम की बाइनरी बनाना
+          gcc -pthread -O2 -o BGMI BGMI.c
+          chmod +x BGMI
+
+      - name: Start Bot
+        run: |
+          # P.py फाइल को चलाना (जिसमें आपने टोकन डाल दिया है)
+          python P.py
